@@ -89,31 +89,29 @@ def shell(machine_name, cmd, machine_info=None):
     return fab(machine_name, callback, machine_info)
 
 
-def get(machine_name, files, machine_info=None):
-    files = set(files)
+def get(machine_name, file_path, machine_info=None):
+    from fabric.api import get
     def download():
-        data = {}
-        for f in files:
-            try:
-                cd('/tmp')
-                fp = StringIO()
-                get("vagrant.jumplist", fp)
-                data['f'] = fp
-            except Exception as e:
-                print f, e
-        return data
+        path = os.path.dirname(file_path)
+        file_name = os.path.basename(file_path)
+        cd(path)
+        fp = StringIO()
+        get(file_name, fp)
+        fp.seek(0)
+        return fp
 
-    data =  docker_machine.fab(machine_name, download, machine_info)
+    data =  fab(machine_name, download, machine_info)
     return data
 
-def put(machine_name, files, file_to_path, machine_info=None):
+def put(machine_name, files, upload_to, machine_info=None):
+    from fabric.api import put
 
     def upload():
-        cd(file_to)
+        cd(upload_to)
         put(*files)
-        return [os.path.join(file_to, f) for f in files]
+        return [os.path.join(upload_to, f) for f in files]
 
-    return docker_machine.fab(machine_name, upload, machine_info)
+    return fab(machine_name, upload, machine_info)
 
 
 def docker_client(machine_name, machine_info=None):
