@@ -94,11 +94,11 @@ def get(machine_name, file_path, machine_info=None):
     def download():
         path = os.path.dirname(file_path)
         file_name = os.path.basename(file_path)
-        cd(path)
-        fp = StringIO()
-        get(file_name, fp)
-        fp.seek(0)
-        return fp
+        with cd(path):
+            fp = StringIO()
+            get(file_name, fp)
+            fp.seek(0)
+            return fp
 
     data =  fab(machine_name, download, machine_info)
     return data
@@ -107,9 +107,9 @@ def put(machine_name, files, upload_to, machine_info=None):
     from fabric.api import put
 
     def upload():
-        cd(upload_to)
-        put(*files)
-        return [os.path.join(upload_to, f) for f in files]
+        with cd(upload_to):
+            put(*files)
+            return [os.path.join(upload_to, f) for f in files]
 
     return fab(machine_name, upload, machine_info)
 
