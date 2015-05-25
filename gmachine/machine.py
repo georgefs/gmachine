@@ -103,13 +103,13 @@ def get(machine_name, file_path, machine_info=None):
     data =  fab(machine_name, download, machine_info)
     return data
 
-def put(machine_name, files, upload_to, machine_info=None):
+def put(machine_name, _f, upload_to, machine_info=None):
     from fabric.api import put
 
     def upload():
-        with cd(upload_to):
-            put(*files)
-            return [os.path.join(upload_to, f) for f in files]
+        run('pwd')
+        put(_f, upload_to)
+        return os.path.join(upload_to, _f)
 
     return fab(machine_name, upload, machine_info)
 

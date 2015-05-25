@@ -39,7 +39,7 @@ def get(machine_name, file_path, file_to):
         f.write(fi.read())
 
 def put(machine_name, file_path, file_to):
-    return machine.put(machine_name, [file_path], file_to)
+    return machine.put(machine_name, file_path, file_to)
 
 
 def info(machine_name):
