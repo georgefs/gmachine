@@ -2,6 +2,7 @@
 from gmachine.conf import settings
 import os
 from fabric.api import local
+import re
 
 class Docker_Machine(object):
     def __init__(self, machine_path, store_path=None):
@@ -13,6 +14,9 @@ class Docker_Machine(object):
     def __execute__(self, cmd, capture=True, direct=False):
         if isinstance(cmd, list):
             cmd = " ".join(cmd)
+            cmd = cmd.replace('boolTrue', '')
+            cmd = re.sub(r'[\w-]+ boolFalse', '', cmd)
+            print cmd
         elif not isinstance(cmd, basestring):
             raise Exception('type error')
 
